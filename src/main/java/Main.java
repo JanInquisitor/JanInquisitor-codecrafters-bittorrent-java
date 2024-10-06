@@ -18,8 +18,13 @@ public class Main {
                 System.out.println(e.getMessage());
                 return;
             }
-            System.out.println(gson.toJson(decoded)); // This returns a JSON response (well kinda)
-//            System.out.println(decoded);
+
+            if (Character.isDigit(decoded.charAt(0))) {
+                System.out.println(decoded);
+            } else {
+                System.out.println(gson.toJson(decoded)); // This returns a JSON response (well kinda)
+            }
+
         } else {
             System.out.println("Unknown command: " + command);
         }
