@@ -19,11 +19,14 @@ public class Main {
                 return;
             }
 
-            if (Character.isDigit(decoded.charAt(0))) {
+            try {
+                Double.parseDouble(decoded);
                 System.out.println(decoded);
-            } else {
+            } catch (NumberFormatException nfe) {
                 System.out.println(gson.toJson(decoded)); // This returns a JSON response (well kinda)
+
             }
+
 
         } else {
             System.out.println("Unknown command: " + command);
