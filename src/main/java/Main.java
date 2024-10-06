@@ -26,6 +26,7 @@ public class Main {
 
   }
 
+  // This is a basic (and for now only) Bencode decoding method.s
   static String decodeBencode(String bencodedString) {
     if (Character.isDigit(bencodedString.charAt(0))) {
       int firstColonIndex = 0;
