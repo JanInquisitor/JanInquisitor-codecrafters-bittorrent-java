@@ -41,7 +41,8 @@ public class Main {
         } else if (bencodedString.charAt(0) == 'i') {
             StringBuilder sb = new StringBuilder();
             for (int i = 1; i < bencodedString.length(); i++) {
-                if (Character.isDigit(bencodedString.charAt(i))) {
+                if (Character.isDigit(bencodedString.charAt(i))
+                        || bencodedString.charAt(i) == '-') {
                     sb.append(bencodedString.charAt(i));
                 }
             }
