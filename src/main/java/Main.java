@@ -18,7 +18,7 @@ public class Main {
                 System.out.println(e.getMessage());
                 return;
             }
-            System.out.println(gson.toJson(decoded));
+            System.out.println(gson.toJson(decoded)); // This returns a JSON response (well kinda)
 
         } else {
             System.out.println("Unknown command: " + command);
@@ -26,7 +26,7 @@ public class Main {
 
     }
 
-    // This is a basic (and for now only) Bencode decoding method.s
+    // @TODO: For now add new cases (whether with a switch or more if statements) for handling different data types
     static String decodeBencode(String bencodedString) {
         if (Character.isDigit(bencodedString.charAt(0))) {
             int firstColonIndex = 0;
@@ -38,6 +38,14 @@ public class Main {
             }
             int length = Integer.parseInt(bencodedString.substring(0, firstColonIndex));
             return bencodedString.substring(firstColonIndex + 1, firstColonIndex + 1 + length);
+        } else if (bencodedString.charAt(0) == 'i') {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < bencodedString.length(); i++) {
+                if (Character.isDigit(bencodedString.charAt(i))) {
+                    sb.append(bencodedString.charAt(i));
+                }
+            }
+            return sb.toString();
         } else {
             throw new RuntimeException("Only strings are supported at the moment");
         }
