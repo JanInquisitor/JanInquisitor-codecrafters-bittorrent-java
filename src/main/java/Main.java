@@ -1,8 +1,11 @@
+import com.dampcake.bencode.Bencode;
+import com.dampcake.bencode.Type;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
@@ -24,12 +27,7 @@ public class Main {
                 return;
             }
 
-
-            if (decoded instanceof Integer) {
-                System.out.println(decoded);
-            } else if (decoded instanceof String) {
-                System.out.println(gson.toJson(decoded));
-            }
+            System.out.println(gson.toJson(decoded));
 
         } else {
             System.out.println("Unknown command: " + command);
@@ -39,12 +37,15 @@ public class Main {
 
     // I could use a stack or dequeue...
     static Object decodeBencode(String bencodedString) {
+        Bencode bencode = new Bencode();
+
+
         if (Character.isDigit(bencodedString.charAt(0))) {
-            return decodeString(bencodedString);
+            return bencode.decode(bencodedString.getBytes(), Type.STRING);
         } else if (bencodedString.startsWith("i")) {
-            return decodeInteger(bencodedString);
+            return bencode.decode(bencodedString.getBytes(), Type.NUMBER);
         } else if (bencodedString.startsWith("l")) {
-            return decodeList(bencodedString);
+            return bencode.decode(bencodedString.getBytes(), Type.LIST);
         } else {
             throw new RuntimeException("Only strings are supported at the moment");
         }
@@ -58,7 +59,7 @@ public class Main {
 
         String[] arr = wholelist.split("i");
 
-        for (int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length - 1; i++) {
             if (arr[i].contains(":")) {
                 list.add(decodeString(arr[i]));
             } else if (Character.isDigit(arr[i].charAt(1))) {
