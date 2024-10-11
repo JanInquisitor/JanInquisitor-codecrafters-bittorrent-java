@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 // import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
@@ -20,15 +19,12 @@ public class Main {
             String bencodedValue = args[1];
             Object decoded;
             try {
-
                 decoded = decodeBencode(bencodedValue);
             } catch (RuntimeException e) {
                 System.out.println(e.getMessage());
                 return;
             }
-
             System.out.println(gson.toJson(decoded));
-
         } else {
             System.out.println("Unknown command: " + command);
         }
@@ -39,13 +35,14 @@ public class Main {
     static Object decodeBencode(String bencodedString) {
         Bencode bencode = new Bencode();
 
-
         if (Character.isDigit(bencodedString.charAt(0))) {
             return bencode.decode(bencodedString.getBytes(), Type.STRING);
         } else if (bencodedString.startsWith("i")) {
             return bencode.decode(bencodedString.getBytes(), Type.NUMBER);
         } else if (bencodedString.startsWith("l")) {
             return bencode.decode(bencodedString.getBytes(), Type.LIST);
+        } else if (bencodedString.startsWith("d")) {
+            return bencode.decode(bencodedString.getBytes(), Type.DICTIONARY);
         } else {
             throw new RuntimeException("Only strings are supported at the moment");
         }
@@ -72,8 +69,7 @@ public class Main {
         System.out.println(Arrays.toString(list.toArray(ans)));
         return list.toArray(ans);
     }
-
-
+    
     static String decodeString(String bencodedString) {
         int firstColonIndex = 0;
         for (int i = 0; i < bencodedString.length(); i++) {
