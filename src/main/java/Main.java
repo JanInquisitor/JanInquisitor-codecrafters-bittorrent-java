@@ -36,20 +36,22 @@ public class Main {
         }
     }
 
-    private static void readInfoFile(String pathString) throws IOException {
+    private static void readInfoFile(String pathString) {
+        try {
 
-        Path path = Paths.get(pathString);
+            Path path = Paths.get(pathString);
 
-        byte[] torrentBytesArray = Files.readAllBytes(path);
+            byte[] torrentBytesArray = Files.readAllBytes(path);
 
-        final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+            final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
-        final Object url = dict.get("announce");
-        System.out.printf("Tracker URL: %s\n", url);
+            final Object url = dict.get("announce");
+            System.out.printf("Tracker URL: %s\n", url);
 
-        final Map<String, Object> info = (Map<String, Object>) dict.get("info");
-        System.out.printf("Length: %s\n", info.get("length"));
-
+            final Map<String, Object> info = (Map<String, Object>) dict.get("info");
+            System.out.printf("Length: %s\n", info.get("length"));
+        } catch (Exception e) {
+        }
 
     }
 
