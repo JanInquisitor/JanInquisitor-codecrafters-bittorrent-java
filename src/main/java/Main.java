@@ -2,20 +2,22 @@ import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.Type;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
+
 // import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
     private static final Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception {
-        // You can use print statements as follows for debugging, they'll be visible when running tests.
-//        System.out.println("Logs from your program will appear here!");
+
         String command = args[0];
+
         if ("decode".equals(command)) {
-            //  Uncomment this block to pass the first stage
             String bencodedValue = args[1];
             Object decoded;
             try {
@@ -25,13 +27,30 @@ public class Main {
                 return;
             }
             System.out.println(gson.toJson(decoded));
+        } else if ("info".equals(args[0])) {
+            readInfoFile(args);
         } else {
             System.out.println("Unknown command: " + command);
         }
-
     }
 
-    // I could use a stack or dequeue...
+    private static void readInfoFile(String[] args) throws IOException {
+        Path path = Paths.get(args[1]);
+
+        byte[] torrentBytesArray = Files.readAllBytes(path);
+
+        Bencode bencode = new Bencode(false);
+
+        Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+
+        Object url = dict.get("announce");
+        System.out.printf("Tracker URL: %s\n", url);
+
+        Map<String, Object> info = (Map<String, Object>) dict.get("info");
+        System.out.printf("Length: %s\n", info.get("length"));
+    }
+
+    // I could use a stack or dequeue for when I decide to implement my own bencode solution.
     static Object decodeBencode(String bencodedString) {
         Bencode bencode = new Bencode();
 
@@ -69,7 +88,7 @@ public class Main {
         System.out.println(Arrays.toString(list.toArray(ans)));
         return list.toArray(ans);
     }
-    
+
     static String decodeString(String bencodedString) {
         int firstColonIndex = 0;
         for (int i = 0; i < bencodedString.length(); i++) {
