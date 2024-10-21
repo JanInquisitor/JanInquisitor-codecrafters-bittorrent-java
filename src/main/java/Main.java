@@ -13,6 +13,8 @@ import java.util.*;
 public class Main {
     private static final Gson gson = new Gson();
 
+    private static final Bencode bencode = new Bencode();
+
     public static void main(String[] args) throws Exception {
 
         String command = args[0];
@@ -35,23 +37,20 @@ public class Main {
     }
 
     private static void readInfoFile(String pathString) throws IOException {
-        try {
-            Path path = Paths.get(pathString);
 
-            byte[] torrentBytesArray = Files.readAllBytes(path);
+        Path path = Paths.get(pathString);
 
-            Bencode bencode = new Bencode(false);
+        byte[] torrentBytesArray = Files.readAllBytes(path);
 
-            Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+        final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
-            Object url = dict.get("announce");
-            System.out.printf("Tracker URL: %s\n", url);
+        final Object url = dict.get("announce");
+        System.out.printf("Tracker URL: %s\n", url);
 
-            Map<String, Object> info = (Map<String, Object>) dict.get("info");
-            System.out.printf("Length: %s\n", info.get("length"));
-        } catch (Exception e) {
+        final Map<String, Object> info = (Map<String, Object>) dict.get("info");
+        System.out.printf("Length: %s\n", info.get("length"));
 
-        }
+
     }
 
     // I could use a stack or dequeue for when I decide to implement my own bencode solution.
