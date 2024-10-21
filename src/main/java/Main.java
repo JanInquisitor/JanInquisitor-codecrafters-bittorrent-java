@@ -35,19 +35,23 @@ public class Main {
     }
 
     private static void readInfoFile(String pathString) throws IOException {
-        Path path = Paths.get(pathString);
+        try {
+            Path path = Paths.get(pathString);
 
-        byte[] torrentBytesArray = Files.readAllBytes(path);
+            byte[] torrentBytesArray = Files.readAllBytes(path);
 
-        Bencode bencode = new Bencode(false);
+            Bencode bencode = new Bencode(false);
 
-        Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+            Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
-        Object url = dict.get("announce");
-        System.out.printf("Tracker URL: %s\n", url);
+            Object url = dict.get("announce");
+            System.out.printf("Tracker URL: %s\n", url);
 
-        Map<String, Object> info = (Map<String, Object>) dict.get("info");
-        System.out.printf("Length: %s\n", info.get("length"));
+            Map<String, Object> info = (Map<String, Object>) dict.get("info");
+            System.out.printf("Length: %s\n", info.get("length"));
+        } catch (Exception e) {
+
+        }
     }
 
     // I could use a stack or dequeue for when I decide to implement my own bencode solution.
