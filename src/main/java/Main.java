@@ -28,14 +28,14 @@ public class Main {
             }
             System.out.println(gson.toJson(decoded));
         } else if ("info".equals(args[0])) {
-            readInfoFile(args);
+            readInfoFile(args[1]);
         } else {
             System.out.println("Unknown command: " + command);
         }
     }
 
-    private static void readInfoFile(String[] args) throws IOException {
-        Path path = Paths.get(args[1]);
+    private static void readInfoFile(String pathString) throws IOException {
+        Path path = Paths.get(pathString);
 
         byte[] torrentBytesArray = Files.readAllBytes(path);
 
