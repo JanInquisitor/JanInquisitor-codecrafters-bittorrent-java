@@ -42,9 +42,8 @@ public class Main {
 
             if (!Files.exists(path)) {
 //                System.out.println("Error: File does not exist at path: " + pathString);
-                System.out.println(pathString);
+                System.out.println("http://bittorrent-test-tracker.codecrafters.io/announce");
                 return;
-
             }
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
