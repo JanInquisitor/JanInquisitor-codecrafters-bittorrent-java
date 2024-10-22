@@ -17,6 +17,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
+        System.out.println(Arrays.toString(args));
+
         String command = args[0];
 
         if ("decode".equals(command)) {
@@ -51,7 +53,6 @@ public class Main {
 
             final Object url = dict.get("announce");
             System.out.printf("Tracker URL: %s\n", url);
-
 
             final Map<String, Object> info = (Map<String, Object>) dict.get("info");
             System.out.printf("Length: %s\n", info.get("length"));
