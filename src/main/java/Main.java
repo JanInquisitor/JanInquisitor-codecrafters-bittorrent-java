@@ -75,7 +75,7 @@ public class Main {
         if (Character.isDigit(bencodedString.charAt(0))) {
             return bencode.decode(bencodedString.getBytes(), Type.STRING);
         } else if (bencodedString.startsWith("i")) {
-            return byteBencode.decode(bencodedString.getBytes(), Type.NUMBER);
+            return bencode.decode(bencodedString.getBytes(), Type.NUMBER);
         } else if (bencodedString.startsWith("l")) {
             return bencode.decode(bencodedString.getBytes(), Type.LIST);
         } else if (bencodedString.startsWith("d")) {
