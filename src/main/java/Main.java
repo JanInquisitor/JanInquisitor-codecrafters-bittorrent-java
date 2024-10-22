@@ -28,7 +28,7 @@ public class Main {
                 System.out.println(e.getMessage());
                 return;
             }
-            System.out.println(gson.toJson(decoded));
+            System.out.println(decoded);
         } else if ("info".equals(args[0])) {
             readInfoFile(args[1]);
         } else {
