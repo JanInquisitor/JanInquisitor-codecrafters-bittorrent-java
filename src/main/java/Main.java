@@ -40,28 +40,22 @@ public class Main {
         try {
             Path path = Paths.get(pathString);
 
-//            if (!Files.exists(path)) {
-//                return;
-//            }
+            if (!Files.exists(path)) {
+                System.out.println("File path doesn't exist.");
+                return;
+            }
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
 
             final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
             final Object url = dict.get("announce");
-            if (url == null) {
-                System.out.println("Error: 'announce' field not found in torrent file.");
-            } else {
-                System.out.printf("Tracker URL: %s\n", url);
-            }
+            System.out.printf("Tracker URL: %s\n", url);
+
 
             final Map<String, Object> info = (Map<String, Object>) dict.get("info");
+            System.out.printf("Length: %s\n", info.get("length"));
 
-            if (info != null) {
-                System.out.printf("Length: %s\n", info.get("length"));
-            } else {
-                System.out.println("Error: 'info' field not found in torrent file.");
-            }
 
         } catch (Exception e) {
             e.printStackTrace(); // Print the exception for debugging
