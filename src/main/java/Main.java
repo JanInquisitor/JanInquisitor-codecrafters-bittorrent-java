@@ -40,6 +40,11 @@ public class Main {
         try {
             Path path = Paths.get(pathString);
 
+            if (!Files.exists(path)) {
+                System.out.println("Error: File does not exist at path: " + pathString);
+                return;
+            }
+
             byte[] torrentBytesArray = Files.readAllBytes(path);
 
             final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
