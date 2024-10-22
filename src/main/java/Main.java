@@ -28,7 +28,7 @@ public class Main {
                 System.out.println(e.getMessage());
                 return;
             }
-            System.out.println(decoded);
+            System.out.println(gson.toJson(decoded));
         } else if ("info".equals(args[0])) {
             readInfoFile(args[1]);
         } else {
@@ -40,9 +40,9 @@ public class Main {
         try {
             Path path = Paths.get(pathString);
 
-            if (!Files.exists(path)) {
-                return;
-            }
+//            if (!Files.exists(path)) {
+//                return;
+//            }
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
 
@@ -71,10 +71,11 @@ public class Main {
 
     // I could use a stack or dequeue for when I decide to implement my own bencode solution.
     static Object decodeBencode(String bencodedString) {
+
         if (Character.isDigit(bencodedString.charAt(0))) {
             return bencode.decode(bencodedString.getBytes(), Type.STRING);
         } else if (bencodedString.startsWith("i")) {
-            return bencode.decode(bencodedString.getBytes(), Type.NUMBER);
+            return byteBencode.decode(bencodedString.getBytes(), Type.NUMBER);
         } else if (bencodedString.startsWith("l")) {
             return bencode.decode(bencodedString.getBytes(), Type.LIST);
         } else if (bencodedString.startsWith("d")) {
@@ -82,6 +83,7 @@ public class Main {
         } else {
             throw new RuntimeException("Only strings are supported at the moment");
         }
+
     }
 
     private static Object[] decodeList(String bencodedString) {
