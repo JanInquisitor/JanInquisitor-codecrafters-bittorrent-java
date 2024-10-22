@@ -41,8 +41,10 @@ public class Main {
             Path path = Paths.get(pathString);
 
             if (!Files.exists(path)) {
-                System.out.println("Error: File does not exist at path: " + pathString);
+//                System.out.println("Error: File does not exist at path: " + pathString);
+                System.out.println(pathString);
                 return;
+
             }
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
