@@ -38,7 +38,6 @@ public class Main {
 
     private static void readInfoFile(String pathString) {
         try {
-
             Path path = Paths.get(pathString);
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
@@ -46,19 +45,28 @@ public class Main {
             final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
             final Object url = dict.get("announce");
-            System.out.printf("Tracker URL: %s\n", url);
+            if (url == null) {
+                System.out.println("Error: 'announce' field not found in torrent file.");
+            } else {
+                System.out.printf("Tracker URL: %s\n", url);
+            }
 
             final Map<String, Object> info = (Map<String, Object>) dict.get("info");
-            System.out.printf("Length: %s\n", info.get("length"));
-        } catch (Exception e) {
-        }
 
+            if (info != null) {
+                System.out.printf("Length: %s\n", info.get("length"));
+            } else {
+                System.out.println("Error: 'info' field not found in torrent file.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Print the exception for debugging
+        }
     }
+
 
     // I could use a stack or dequeue for when I decide to implement my own bencode solution.
     static Object decodeBencode(String bencodedString) {
-        Bencode bencode = new Bencode();
-
         if (Character.isDigit(bencodedString.charAt(0))) {
             return bencode.decode(bencodedString.getBytes(), Type.STRING);
         } else if (bencodedString.startsWith("i")) {
