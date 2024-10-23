@@ -1,14 +1,10 @@
 import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.Type;
 import com.google.gson.Gson;
-
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-
-// import com.dampcake.bencode.Bencode; - available if you need it!
 
 public class Main {
     private static final Gson gson = new Gson();
@@ -16,9 +12,6 @@ public class Main {
     private static final Bencode bencode = new Bencode();
 
     public static void main(String[] args) throws Exception {
-
-        System.out.println(Arrays.toString(args));
-
         String command = args[0];
 
         if ("decode".equals(command)) {
@@ -42,10 +35,7 @@ public class Main {
         try {
             Path path = Paths.get(pathString);
 
-            if (!Files.exists(path)) {
-                System.out.println("File path doesn't exist.");
-                return;
-            }
+            System.out.println(path);
 
             byte[] torrentBytesArray = Files.readAllBytes(path);
 
