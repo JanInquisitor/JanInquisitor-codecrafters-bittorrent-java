@@ -42,14 +42,27 @@ public class Main {
 
             File file = new File(pathString);
 
-            final byte[] torrentBytesArray = Files.readAllBytes(file.toPath());
+            byte[] torrentBytesArray;
 
-            final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+            if (file.toPath().endsWith(".")) {
+                String path = file.getPath();
 
-            final Object url = dict.get("announce");
+                StringBuilder sb = new StringBuilder(path);
+
+                String fixedPath = sb.substring(0, sb.length() - 1);
+
+                torrentBytesArray = Files.readAllBytes(Paths.get(fixedPath));
+            } else {
+                torrentBytesArray = Files.readAllBytes(file.toPath());
+            }
+
+
+            Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
+
+            Object url = dict.get("announce");
             System.out.printf("Tracker URL: %s\n", url);
 
-            final Map<String, Object> info = (Map<String, Object>) dict.get("info");
+            Map<String, Object> info = (Map<String, Object>) dict.get("info");
             System.out.printf("Length: %s\n", info.get("length"));
 
         } catch (Exception e) {
