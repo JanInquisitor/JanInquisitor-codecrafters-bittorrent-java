@@ -37,25 +37,15 @@ public class Main {
     }
 
     private static void readInfoFile(String pathString) {
+        if (pathString.startsWith(".")) {
+            StringBuilder sb = new StringBuilder(pathString);
+            pathString = sb.substring(0, sb.length() - 1);
+        }
+
+        Path path = Paths.get(pathString);
+
         try {
-//            Path path = Paths.get(pathString);
-
-            File file = new File(pathString);
-
-            byte[] torrentBytesArray;
-
-            if (file.toPath().endsWith(".")) {
-                String path = file.getPath();
-
-                StringBuilder sb = new StringBuilder(path);
-
-                String fixedPath = sb.substring(0, sb.length() - 1);
-
-                torrentBytesArray = Files.readAllBytes(Paths.get(fixedPath));
-            } else {
-                torrentBytesArray = Files.readAllBytes(file.toPath());
-            }
-
+            byte[] torrentBytesArray = Files.readAllBytes(path);
 
             Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
