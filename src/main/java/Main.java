@@ -2,6 +2,10 @@ import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.Type;
 import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,9 +38,11 @@ public class Main {
 
     private static void readInfoFile(String pathString) {
         try {
-            Path path = Paths.get(pathString);
+//            Path path = Paths.get(pathString);
 
-            final byte[] torrentBytesArray = Files.readAllBytes(path);
+            File file = new File(pathString);
+
+            final byte[] torrentBytesArray = Files.readAllBytes(file.toPath());
 
             final Map<String, Object> dict = bencode.decode(torrentBytesArray, Type.DICTIONARY);
 
