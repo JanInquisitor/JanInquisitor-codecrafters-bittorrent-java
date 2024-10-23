@@ -37,7 +37,7 @@ public class Main {
     }
 
     private static void readInfoFile(String pathString) {
-        if (pathString.startsWith(".")) {
+        if (pathString.endsWith(".")) {
             StringBuilder sb = new StringBuilder(pathString);
             pathString = sb.substring(0, sb.length() - 1);
         }
