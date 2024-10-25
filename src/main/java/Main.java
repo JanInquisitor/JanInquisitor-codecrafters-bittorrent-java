@@ -58,7 +58,7 @@ public class Main {
 //            System.out.println(Arrays.toString(infoHash));
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
