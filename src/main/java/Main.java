@@ -2,19 +2,16 @@ import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.Type;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.MessageDigest;
 import java.util.*;
 
 public class Main {
     private static final Gson gson = new Gson();
 
-    private static final Bencode bencode = new Bencode();
+    private static final Bencode bencode = new Bencode(true);
 
     public static void main(String[] args) throws Exception {
         String command = args[0];
@@ -55,6 +52,11 @@ public class Main {
             Map<String, Object> info = (Map<String, Object>) dict.get("info");
             System.out.printf("Length: %s\n", info.get("length"));
 
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            byte[] infoHash = digest.digest(bencode.encode((Map<String, Object>) bencode.decode(torrentBytesArray, Type.DICTIONARY).get("info")));
+            System.out.println("Info Hash: " + bytesToHex(infoHash));
+//            System.out.println(Arrays.toString(infoHash));
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -78,49 +80,13 @@ public class Main {
 
     }
 
-    private static Object[] decodeList(String bencodedString) {
-        List<String> list = new ArrayList<>();
 
-        // This takes out the 'e' char that finish the list, for now at least.
-        String wholelist = bencodedString.substring(1, bencodedString.length() - 1);
-
-        String[] arr = wholelist.split("i");
-
-        for (int i = 0; i < arr.length - 1; i++) {
-            if (arr[i].contains(":")) {
-                list.add(decodeString(arr[i]));
-            } else if (Character.isDigit(arr[i].charAt(1))) {
-                list.add(String.valueOf(decodeInteger("i" + arr[i])));
-            }
-        }
-
-
-        String[] ans = new String[list.size()];
-        System.out.println(Arrays.toString(list.toArray(ans)));
-        return list.toArray(ans);
-    }
-
-    static String decodeString(String bencodedString) {
-        int firstColonIndex = 0;
-        for (int i = 0; i < bencodedString.length(); i++) {
-            if (bencodedString.charAt(i) == ':') {
-                firstColonIndex = i;
-                break;
-            }
-        }
-        int length = Integer.parseInt(bencodedString.substring(0, firstColonIndex));
-        return bencodedString.substring(firstColonIndex + 1, firstColonIndex + 1 + length);
-    }
-
-    static Integer decodeInteger(String bencodedString) {
+    private static String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 1; i < bencodedString.length(); i++) {
-            if (Character.isDigit(bencodedString.charAt(i))
-                    || bencodedString.charAt(i) == '-') {
-                sb.append(bencodedString.charAt(i));
-            }
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
         }
-        return Integer.valueOf(sb.toString());
+        return sb.toString();
     }
 
 }
