@@ -11,7 +11,9 @@ import java.util.*;
 public class Main {
     private static final Gson gson = new Gson();
 
-    private static final Bencode bencode = new Bencode(true);
+    private static final Bencode bencode = new Bencode(false);
+
+    private static final Bencode byteBencode = new Bencode(true);
 
     public static void main(String[] args) throws Exception {
         String command = args[0];
@@ -53,7 +55,7 @@ public class Main {
             System.out.printf("Length: %s\n", info.get("length"));
 
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            byte[] infoHash = digest.digest(bencode.encode((Map<String, Object>) bencode.decode(torrentBytesArray, Type.DICTIONARY).get("info")));
+            byte[] infoHash = digest.digest(byteBencode.encode((Map<String, Object>) byteBencode.decode(torrentBytesArray, Type.DICTIONARY).get("info")));
             System.out.println("Info Hash: " + bytesToHex(infoHash));
 //            System.out.println(Arrays.toString(infoHash));
 
